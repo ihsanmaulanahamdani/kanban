@@ -123,6 +123,7 @@
 
 <script>
 import { ref } from '../firebase'
+import swal from 'sweetalert2'
 
 export default {
   name: 'home',
@@ -134,7 +135,26 @@ export default {
       ref.child(key).update({ status: statusUpdate })
     },
     deleteTask (key) {
-      ref.child(key).remove()
+      swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then((result) => {
+        if (result.value) {
+          ref.child(key).remove()
+          swal({
+            position: 'center',
+            type: 'success',
+            title: 'Your file has been deleted',
+            showConfirmButton: false,
+            timer: 1500
+          })
+        }
+      })
     }
   }
 }
@@ -157,7 +177,7 @@ export default {
 }
 .card-size {
   width: 20rem;
-  margin: 5px 5px;
+  margin: 3px 3px;
 }
 .center-items {
   justify-content: center;

@@ -8,7 +8,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
       </ul>
-      <button type="button" class="btn btn-outline-secondary text-white" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Submit New Task</button>
+      <button type="button" class="btn btn-outline-secondary text-white" @click="clearForm" data-toggle="modal" data-target="#exampleModal" data-whatever="@getbootstrap">Submit New Task</button>
 
       <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -44,6 +44,7 @@
 
 <script>
 import { ref } from '../firebase'
+import swal from 'sweetalert2'
 
 export default {
   data () {
@@ -57,6 +58,18 @@ export default {
   methods: {
     submitTask () {
       ref.push({ title: this.title, description: this.description, assignedTo: this.assignedTo, status: this.status })
+      swal({
+        position: 'center',
+        type: 'success',
+        title: 'Your task has been added',
+        showConfirmButton: false,
+        timer: 1500
+      })
+    },
+    clearForm () {
+      this.title = ''
+      this.description = ''
+      this.assignedTo = ''
     }
   }
 }
