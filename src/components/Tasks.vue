@@ -108,7 +108,7 @@
                     </div>
                     <div class="card-footer">
                       <button class="btn btn-success" @click="updateTaskStatus(task['.key'], 'doing')"><i class="fas fa-arrow-left"></i></button>
-                      <button class="btn btn-success" @click="deleteTask(task['.key'])"><i class="fas fa-check"></i></button>
+                      <button class="btn btn-success" @click="deleteTask(task['.key'], 'done')"><i class="fas fa-check"></i></button>
                     </div>
                   </div>
                 </div>
@@ -134,7 +134,18 @@ export default {
     updateTaskStatus (key, statusUpdate) {
       ref.child(key).update({ status: statusUpdate })
     },
-    deleteTask (key) {
+    deleteTask (key, statusUpdate) {
+      let confirmButtonText
+      let title
+
+      if (statusUpdate === 'done') {
+        confirmButtonText = 'Yes, complete task!'
+        title = 'Your task has been completed'
+      } else {
+        confirmButtonText = 'Yes, delete it!'
+        title = 'Your file has been deleted'
+      }
+
       swal({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -142,14 +153,14 @@ export default {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
+        confirmButtonText
       }).then((result) => {
         if (result.value) {
           ref.child(key).remove()
           swal({
             position: 'center',
             type: 'success',
-            title: 'Your file has been deleted',
+            title,
             showConfirmButton: false,
             timer: 1500
           })
